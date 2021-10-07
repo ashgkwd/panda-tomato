@@ -1,0 +1,26 @@
+.pt-pomodoro {
+  max-width: 370px;
+  margin: 10% auto;
+}
+
+.pt-pomodoro-pause,
+.pt-pomodoro-start {
+  margin: auto;
+  display: block;
+}
+
+.pt-is-paused-true.pt-pomodoro-pause {
+  visibility: hidden;
+}
+
+.pt-is-paused-false.pt-pomodoro-pause {
+  visibility: visible;
+}
+
+.pt-is-paused-true.pt-pomodoro-start {
+  visibility: visible;
+}
+
+.pt-is-paused-false.pt-pomodoro-start {
+  visibility: hidden;
+}
