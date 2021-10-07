@@ -15,19 +15,19 @@ function useClockable(startMinutes: number, startSeconds: number) {
   }
 
   useEffect(() => {
-    window.addEventListener(
-      "keypress",
-      (ev) => {
-        if (ev.code === "Space") setIsPaused(!isPaused);
-      },
-      false
-    );
+    const keyboardShortcutSpace = (ev: KeyboardEvent) => {
+      if (ev.code === "Space") setIsPaused(!isPaused);
+    };
+
+    window.addEventListener("keypress", keyboardShortcutSpace, false);
+
+    return () =>
+      window.removeEventListener("keypress", keyboardShortcutSpace, false);
   }, [setIsPaused, isPaused]);
 
   useEffect(() => {
     if (isPaused) return;
     interval.current = window.setInterval(() => {
-      console.log("current values", clockSeconds);
       const remaining = clockSeconds - 1;
       if (remaining <= 3 && remaining > 0) tickSound();
       if (remaining < 0) return;
