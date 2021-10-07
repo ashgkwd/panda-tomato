@@ -6,7 +6,7 @@ function Display({ minutes, seconds }: Displayable) {
   return (
     <div className="pt-display">
       <span className="pt-minutes">{minutes}</span> :{" "}
-      <span className="pt-seconds">{seconds}</span>
+      <span className="pt-seconds">{String(seconds).padStart(2, "0")}</span>
     </div>
   );
 }
