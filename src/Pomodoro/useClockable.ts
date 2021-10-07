@@ -14,6 +14,16 @@ function useClockable(startMinutes: number, startSeconds: number) {
   }
 
   useEffect(() => {
+    window.addEventListener(
+      "keypress",
+      (ev) => {
+        if (ev.code === "Space") setIsPaused(!isPaused);
+      },
+      false
+    );
+  }, [setIsPaused, isPaused]);
+
+  useEffect(() => {
     if (isPaused) return;
     interval.current = window.setInterval(() => {
       console.log("current values", clockSeconds);
