@@ -9,18 +9,10 @@
   display: block;
 }
 
-.pt-is-paused-true.pt-pomodoro-pause {
-  visibility: hidden;
-}
-
-.pt-is-paused-false.pt-pomodoro-pause {
+.pt-visible-true {
   visibility: visible;
 }
 
-.pt-is-paused-true.pt-pomodoro-start {
-  visibility: visible;
-}
-
-.pt-is-paused-false.pt-pomodoro-start {
+.pt-visible-false {
   visibility: hidden;
 }
