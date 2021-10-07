@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { tickSound } from "./tickSound";
 
 function useClockable(startMinutes: number, startSeconds: number) {
   const [clockSeconds, setClockSeconds] = useState(
@@ -28,6 +29,7 @@ function useClockable(startMinutes: number, startSeconds: number) {
     interval.current = window.setInterval(() => {
       console.log("current values", clockSeconds);
       const remaining = clockSeconds - 1;
+      if (remaining <= 3 && remaining > 0) tickSound();
       if (remaining < 0) return;
 
       setClockSeconds(remaining);
