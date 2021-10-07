@@ -1,5 +1,6 @@
 import React from "react";
 import { Displayable } from "../types/Displayable";
+import "./styles.css";
 
 function Display({ minutes, seconds }: Displayable) {
   return (

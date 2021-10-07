@@ -9,7 +9,7 @@ function PomodoroHOC() {
       minutes={minutes}
       seconds={seconds}
       onToggle={toggle}
-      actionLabel={isPaused ? "Start" : "Pause"}
+      isPaused={isPaused}
     />
   );
 }

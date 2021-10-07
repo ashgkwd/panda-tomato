@@ -1,6 +1,6 @@
 import { Displayable } from "./Displayable";
 
 export type Pomodorable = Displayable & {
-  actionLabel: string;
+  isPaused: boolean;
   onToggle: () => void;
 };
