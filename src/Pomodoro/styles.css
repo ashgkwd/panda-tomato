@@ -16,3 +16,21 @@
 .pt-visible-false {
   visibility: hidden;
 }
+
+.pt-space-fix,
+.pt-screen {
+  width: 100%;
+}
+
+.pt-action-bar {
+  margin: 1rem;
+}
+
+.pt-pomodoro-start.pt-visible-false {
+  display: none;
+}
+
+.pt-start-actions {
+  display: flex;
+  justify-content: space-around;
+}

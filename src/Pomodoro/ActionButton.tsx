@@ -9,6 +9,7 @@ function ActionButton({
   placement,
   className,
   tip = "Spacebar",
+  type = "primary",
 }: Actionable) {
   return (
     <Tooltip
@@ -19,7 +20,7 @@ function ActionButton({
       <Button
         size="large"
         ghost={true}
-        type="primary"
+        type={type}
         onClick={onClick}
         icon={icon}
         className={className}
