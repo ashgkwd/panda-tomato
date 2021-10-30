@@ -1,3 +1,5 @@
+import { ButtonType } from "antd/lib/button";
+
 export type Actionable = {
   visibility: boolean | string;
   onClick: (Event?) => void;
@@ -6,4 +8,5 @@ export type Actionable = {
   placement: "bottom" | "top";
   tip: string;
   className: string | undefined;
+  type?: ButtonType;
 };
