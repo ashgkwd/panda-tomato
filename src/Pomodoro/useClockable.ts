@@ -1,85 +1,53 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { tickSound } from "./tickSound";
-
-function initialClockSeconds(
-  startMinutes: number,
-  startSeconds: number
-): number {
-  return startMinutes * 60 + startSeconds;
-}
+import { useCallback, useState } from "react";
+import { Reset, Toggle } from "../types/Clockable";
+import { inFuture, remaining } from "./clockUtils";
+import useInterval from "./useInterval";
+import useKeyboard from "./useKeyboard";
 
 function useClockable(
-  startMinutes: number,
-  startSeconds: number,
+  remainingMinutes: number,
+  remainingSeconds: number,
   onFinish?: () => void
 ) {
-  const [clockSeconds, setClockSeconds] = useState(
-    initialClockSeconds(startMinutes, startSeconds)
+  const [endsAt, setEndsAt] = useState(
+    inFuture(remainingMinutes, remainingSeconds)
   );
-  const [minutes, setMinutes] = useState(startMinutes);
-  const [seconds, setSeconds] = useState(startSeconds);
+  const [[minutes, seconds], setRemaining] = useState(
+    remaining(new Date(), endsAt)
+  );
+
   const [isPaused, setIsPaused] = useState(true);
   const [isReset, setIsReset] = useState(true);
-  const interval = useRef<number | undefined>();
 
-  const toggle = useCallback((): void => {
+  const toggle = useCallback<Toggle>(() => {
     setIsPaused(!isPaused);
     setIsReset(false);
   }, [isPaused]);
 
-  const reset = useCallback(
-    (minutes = startMinutes, seconds = startSeconds): void => {
+  const reset = useCallback<Reset>(
+    (minutes = remainingMinutes, seconds = remainingSeconds) => {
       setIsReset(true);
       setIsPaused(true);
-      setMinutes(minutes);
-      setSeconds(seconds);
-      setClockSeconds(initialClockSeconds(minutes, seconds));
+
+      setEndsAt(inFuture(minutes, seconds));
+      setRemaining([minutes, seconds]);
     },
-    [startMinutes, startSeconds]
+    [remainingMinutes, remainingSeconds]
   );
 
-  function startWork() {
+  const startWork = useCallback(() => {
     reset(25, 0);
     toggle();
-  }
+  }, [reset, toggle]);
 
-  function startBreak() {
+  const startBreak = useCallback(() => {
     reset(5, 0);
     toggle();
-  }
+  }, [reset, toggle]);
 
-  useEffect(() => {
-    const keyboardShortcutSpace = (ev: KeyboardEvent) => {
-      if (ev.code === "Space") toggle();
-    };
+  useKeyboard(isPaused, setIsPaused, toggle, reset);
 
-    const keyboardShortcutOptionR = (ev: KeyboardEvent) => {
-      if (ev.code === "KeyR" && ev.altKey) reset();
-    };
-
-    window.addEventListener("keypress", keyboardShortcutSpace, false);
-    window.addEventListener("keyup", keyboardShortcutOptionR, false);
-
-    return () => {
-      window.removeEventListener("keypress", keyboardShortcutSpace, false);
-      window.removeEventListener("keyup", keyboardShortcutOptionR, false);
-    };
-  }, [setIsPaused, isPaused, reset, toggle]);
-
-  useEffect(() => {
-    if (isPaused) return;
-    interval.current = window.setInterval(() => {
-      const remaining = clockSeconds - 1;
-      if (remaining <= 3 && remaining > 0) tickSound();
-      if (remaining < 0) return onFinish ? onFinish() : reset();
-
-      setClockSeconds(remaining);
-      setSeconds(remaining % 60);
-      setMinutes(Math.floor(remaining / 60));
-    }, 1000);
-
-    return () => clearInterval(interval.current);
-  }, [isPaused, clockSeconds, onFinish, reset]);
+  useInterval(isPaused, endsAt, setRemaining, reset, onFinish);
 
   return [
     { minutes, seconds, isPaused, isReset },
